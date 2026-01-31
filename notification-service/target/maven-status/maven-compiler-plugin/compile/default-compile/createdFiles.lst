@@ -1,0 +1,10 @@
+com\example\releasesystem\notification\repository\NotificationLogRepository.class
+com\example\releasesystem\notification\event\HotfixTaskAddedEvent.class
+com\example\releasesystem\notification\event\SystemErrorEvent.class
+com\example\releasesystem\notification\event\TaskCompletedEvent.class
+com\example\releasesystem\notification\event\TaskAssignedEvent.class
+com\example\releasesystem\notification\domain\NotificationLog.class
+com\example\releasesystem\notification\event\StaleTaskDetectedEvent.class
+com\example\releasesystem\notification\NotificationServiceApplication.class
+com\example\releasesystem\notification\service\EmailService.class
+com\example\releasesystem\notification\service\KafkaConsumerService.class
