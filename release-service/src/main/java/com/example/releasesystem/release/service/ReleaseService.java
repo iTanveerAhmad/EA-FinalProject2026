@@ -17,6 +17,16 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * ReleaseService implements the core business logic for release management.
+ * 
+ * Key Workflow Constraints:
+ * 1. Single In-Process Rule: Only ONE task per developer can be in-progress at any time.
+ * 2. Sequential Task Execution: Tasks must be completed in release order; cannot start task N until task N-1 is complete.
+ * 3. Hotfix Logic: When tasks are added to a completed release, automatically re-open the release.
+ * 
+ * All service methods use event-driven communication via Kafka for asynchronous updates to the Notification Service.
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -24,8 +34,11 @@ public class ReleaseService {
 
     private final ReleaseRepository releaseRepository;
     private final KafkaProducerService kafkaProducerService;
-    private final ActivityStreamService activityStreamService; // Injected
+    private final ActivityStreamService activityStreamService;
 
+    /**
+     * Create a new release.
+     */
     public Release createRelease(ReleaseRequest request) {
         Release release = new Release();
         release.setName(request.getName());
@@ -33,15 +46,28 @@ public class ReleaseService {
         return releaseRepository.save(release);
     }
 
+    /**
+     * Get all releases.
+     */
     public List<Release> getAllReleases() {
         return releaseRepository.findAll();
     }
 
+    /**
+     * Get a specific release by ID.
+     */
     public Release getReleaseById(String id) {
         return releaseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Release not found"));
     }
 
+    /**
+     * Add a task to a release.
+     * 
+     * If adding to a completed release (Hotfix Logic):
+     * - The release is automatically re-opened
+     * - A HotfixTaskAddedEvent is published to Kafka
+     */
     @Transactional
     public Release addTaskToRelease(String releaseId, TaskRequest taskRequest) {
         Release release = getReleaseById(releaseId);
@@ -74,11 +100,16 @@ public class ReleaseService {
             release.getId()
         );
         kafkaProducerService.sendTaskAssignedEvent(event);
-        // activityStreamService.pushEvent("Task Assigned", event); // Optional, maybe too noisy
 
         return releaseRepository.save(release);
     }
 
+    /**
+     * Start a task. Enforces workflow constraints:
+     * 1. Single In-Process Rule: Developer cannot have another IN_PROCESS task
+     * 2. Sequential Task Execution: All previous tasks must be COMPLETED
+     * 3. Only assigned developer can start the task
+     */
     @Transactional
     public void startTask(String taskId, String developerId) {
         Release release = releaseRepository.findByTaskId(taskId);
@@ -93,11 +124,13 @@ public class ReleaseService {
              throw new RuntimeException("Developer not assigned to this task");
         }
 
+        // Single In-Process Rule: Check if developer has another task in progress
         List<Release> activeReleases = releaseRepository.findReleasesWithActiveTaskForDeveloper(developerId);
         if (!activeReleases.isEmpty()) {
              throw new RuntimeException("Developer already has an IN_PROCESS task. Finish it first!");
         }
 
+        // Sequential Task Execution: Verify all previous tasks are completed
         List<Task> sortedTasks = release.getTasks().stream()
                 .sorted(Comparator.comparingInt(Task::getOrderIndex))
                 .toList();
@@ -111,13 +144,17 @@ public class ReleaseService {
         }
 
         task.setStatus(TaskStatus.IN_PROCESS);
-        task.setStartedAt(Instant.now()); // Set timestamp
+        task.setStartedAt(Instant.now()); // Used by StaleTaskScheduler
         releaseRepository.save(release);
         
         activityStreamService.pushEvent("Task Started", "Task " + task.getTitle() + " started by " + developerId);
         log.info("Task {} started by {}", taskId, developerId);
     }
 
+    /**
+     * Complete a task. Only the assigned developer can complete the task.
+     * Publishes TaskCompletedEvent to notify downstream services.
+     */
     @Transactional
     public void completeTask(String taskId, String developerId) {
         Release release = releaseRepository.findByTaskId(taskId);
@@ -142,6 +179,10 @@ public class ReleaseService {
         log.info("Task {} completed", taskId);
     }
 
+    /**
+     * Complete a release. All tasks must be COMPLETED.
+     * Once completed, if hotfixes are added, the release is automatically re-opened.
+     */
     @Transactional
     public void completeRelease(String releaseId) {
         Release release = getReleaseById(releaseId);
@@ -158,6 +199,9 @@ public class ReleaseService {
         log.info("Release {} marked as COMPLETED", releaseId);
     }
     
+    /**
+     * Get all tasks assigned to a specific developer across all releases.
+     */
     public List<Task> getTasksForDeveloper(String developerId) {
         List<Release> allReleases = releaseRepository.findAll();
         return allReleases.stream()
@@ -166,6 +210,9 @@ public class ReleaseService {
                 .toList();
     }
     
+    /**
+     * Add a comment to a task for collaborative discussion.
+     */
     @Transactional
     public void addComment(String taskId, String developerId, String content) {
         Release release = releaseRepository.findByTaskId(taskId);

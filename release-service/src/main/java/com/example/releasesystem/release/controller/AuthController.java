@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * AuthController handles user authentication and registration.
+ * Implements JWT-based security with two roles: ADMIN and DEVELOPER.
+ */
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -27,6 +31,11 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
+    /**
+     * Register a new user with a specified role (ADMIN or DEVELOPER).
+     * Password is stored using bcrypt encryption.
+     * Returns a JWT token for immediate login.
+     */
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
         var user = new User();
@@ -40,6 +49,10 @@ public class AuthController {
         return ResponseEntity.ok(new AuthResponse(jwtToken));
     }
 
+    /**
+     * Authenticate a user with credentials and return a JWT token.
+     * Token TTL is 10 hours by default.
+     */
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> authenticate(@RequestBody AuthRequest request) {
         authenticationManager.authenticate(
