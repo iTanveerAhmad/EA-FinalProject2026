@@ -1,0 +1,23 @@
+apiVersion: 1
+
+groups:
+  - orgId: 1
+    name: release-system-alerts
+    folder: Release System
+    interval: 1m
+    rules:
+      - uid: high-500-errors
+        title: High HTTP 500 Error Rate
+        condition: A
+        data:
+          - refId: A
+            relativeTimeRange: { from: 300, to: 0 }
+            datasourceUid: prometheus
+            model:
+              expr: sum(increase(http_server_requests_seconds_count{status=~"5.."}[5m])) > 5
+              refId: A
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          summary: High number of HTTP 500 errors detected in the last 5 minutes

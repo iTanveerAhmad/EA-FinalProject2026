@@ -61,6 +61,11 @@ services:
       - "3000:3000"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - ./config/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./config/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./config/grafana/provisioning/alerting:/etc/grafana/provisioning/alerting
     depends_on:
       - prometheus
     networks:
@@ -76,6 +81,48 @@ services:
     networks:
       - app-network
     # GPU support can be added here if available on host
+
+  release-service:
+    build: ./release-service
+    container_name: release-service
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://admin:adminpassword@mongodb:27017/release_db?authSource=admin
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      OLLAMA_URL: http://ollama:11434
+    depends_on:
+      - mongodb
+      - kafka
+      - ollama
+    networks:
+      - app-network
+
+  notification-service:
+    build: ./notification-service
+    container_name: notification-service
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://admin:adminpassword@mongodb:27017/notification_db?authSource=admin
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+    depends_on:
+      - mongodb
+      - kafka
+    networks:
+      - app-network
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:8080
+    depends_on:
+      - release-service
+    networks:
+      - app-network
 
 networks:
   app-network:
