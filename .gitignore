@@ -1,7 +1,14 @@
-# just ignore
+# Ignore documentation and exported files
 *.md
 *.pdf
-.git/
-.gitignore
-.github/
-.vscode/
+
+# Ignore build output
+bin/
+obj/
+
+# Ignore user-specific Visual Studio settings
+.vs/
+
+# Ignore temporary files
+*.log
+*.tmp
