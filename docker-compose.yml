@@ -106,6 +106,12 @@ services:
     environment:
       SPRING_DATA_MONGODB_URI: mongodb://admin:adminpassword@mongodb:27017/notification_db?authSource=admin
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      # Mail server - replace with your real SMTP server
+      MAIL_HOST: mail.example.com
+      MAIL_PORT: 587
+      MAIL_USERNAME: noreply@example.com
+      MAIL_PASSWORD: changeme
+      MAIL_DEFAULT_DOMAIN: example.com
     depends_on:
       - mongodb
       - kafka
