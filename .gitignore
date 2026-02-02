@@ -1,4 +1,7 @@
-# AI Parts
+# just ignore
 *.md
 *.pdf
-
+.git/
+.gitignore
+.github/
+.vscode/
