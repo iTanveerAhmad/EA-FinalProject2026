@@ -1,4 +1,17 @@
-# AI Parts
+# Ignore documentation and exported files
 *.md
 *.pdf
 
+# Ignore Java/Maven/Gradle build output
+target/
+
+# Ignore .NET build output (if applicable)
+bin/
+obj/
+
+# Ignore user-specific Visual Studio settings
+.vs/
+
+# Ignore temporary files
+*.log
+*.tmp

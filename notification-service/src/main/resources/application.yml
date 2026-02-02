@@ -1,7 +1,20 @@
 server:
   port: 8081
 
+# SMTP Mail Server - replace mail.example.com with your real server (e.g. smtp.gmail.com)
 spring:
+  mail:
+    host: ${MAIL_HOST:mail.example.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:noreply@example.com}
+    password: ${MAIL_PASSWORD:changeme}
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   application:
     name: notification-service
   data:
@@ -13,9 +26,12 @@ spring:
       group-id: notification-group
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-    properties:
-      spring.json.trusted.packages: "*"
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+# If recipient is a username (e.g. dev), append this to form email: dev@example.com
+notification:
+  mail:
+    default-domain: ${MAIL_DEFAULT_DOMAIN:example.com}
 
 management:
   endpoints:

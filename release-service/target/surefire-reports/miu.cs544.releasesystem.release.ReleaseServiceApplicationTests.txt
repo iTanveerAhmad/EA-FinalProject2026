@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: miu.cs544.releasesystem.release.ReleaseServiceApplicationTests
--------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.346 s -- in miu.cs544.releasesystem.release.ReleaseServiceApplicationTests

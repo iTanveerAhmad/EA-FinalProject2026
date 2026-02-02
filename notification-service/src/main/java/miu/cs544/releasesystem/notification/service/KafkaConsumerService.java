@@ -4,18 +4,14 @@ import miu.cs544.releasesystem.notification.domain.NotificationLog;
 import miu.cs544.releasesystem.notification.event.*;
 import miu.cs544.releasesystem.notification.repository.NotificationLogRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.annotation.RetryableTopic;
-import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class KafkaConsumerService {
 
@@ -23,7 +19,14 @@ public class KafkaConsumerService {
     private final NotificationLogRepository notificationLogRepository;
     private final ObjectMapper objectMapper;
 
-    @RetryableTopic(attempts = 4, backOff = @Backoff(delay = 1000, multiplier = 2, maxDelay = 10000), dltTopicSuffix = "-dlt", include = Exception.class)
+    public KafkaConsumerService(EmailService emailService,
+                                NotificationLogRepository notificationLogRepository,
+                                ObjectMapper objectMapper) {
+        this.emailService = emailService;
+        this.notificationLogRepository = notificationLogRepository;
+        this.objectMapper = objectMapper;
+    }
+
     @KafkaListener(topics = "task-events", groupId = "notification-group")
     public void listenTaskEvents(ConsumerRecord<String, String> record) {
         String key = record.key(); // "assigned", "completed", "hotfix", "stale"
@@ -49,7 +52,6 @@ public class KafkaConsumerService {
         }
     }
 
-    @RetryableTopic(attempts = 4, backOff = @Backoff(delay = 1000, multiplier = 2, maxDelay = 10000), dltTopicSuffix = "-dlt", include = Exception.class)
     @KafkaListener(topics = "system-events", groupId = "notification-group")
     public void listenSystemEvents(ConsumerRecord<String, String> record) {
         try {

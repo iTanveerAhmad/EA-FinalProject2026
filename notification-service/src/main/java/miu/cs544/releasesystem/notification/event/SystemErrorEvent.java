@@ -3,6 +3,7 @@ package miu.cs544.releasesystem.notification.event;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.time.Instant;
 
 @Data
