@@ -2,7 +2,10 @@
 *.md
 *.pdf
 
-# Ignore build output
+# Ignore Java/Maven/Gradle build output
+target/
+
+# Ignore .NET build output (if applicable)
 bin/
 obj/
 
