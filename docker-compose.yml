@@ -106,11 +106,7 @@ services:
     environment:
       SPRING_DATA_MONGODB_URI: mongodb://admin:adminpassword@mongodb:27017/notification_db?authSource=admin
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
-      # Gmail SMTP - set MAIL_USERNAME and MAIL_PASSWORD to your Gmail + App Password
-      MAIL_HOST: smtp.gmail.com
-      MAIL_PORT: 587
-      MAIL_USERNAME: ${MAIL_USERNAME:-your.email@gmail.com}
-      MAIL_PASSWORD: ${MAIL_PASSWORD:-your-app-password}
+      # Gmail SMTP - credentials in application.yml
       MAIL_DEFAULT_DOMAIN: gmail.com
     depends_on:
       - mongodb

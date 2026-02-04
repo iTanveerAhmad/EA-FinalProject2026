@@ -13,12 +13,12 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
 
+    @Value("${notification.mail.default-domain:example.com}")
+    private String defaultDomain;
+
     public EmailService(JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
-
-    @Value("${notification.mail.default-domain:example.com}")
-    private String defaultDomain;
 
     public void sendEmail(String recipient, String subject, String body) {
         String toAddress = recipient.contains("@") ? recipient : recipient + "@" + defaultDomain;

@@ -32,6 +32,7 @@ The project consists of two primary microservices and a Dockerized infrastructur
 *   **Message Broker:** Kafka + Zookeeper
 *   **Database:** MongoDB
 *   **AI Model:** Ollama (Local LLM)
+*   **Email:** Gmail SMTP for task-assignment notifications (credentials in application.yml)
 *   **Monitoring:** Prometheus + Grafana
 
 ## 🛠 Prerequisites
@@ -43,7 +44,7 @@ The project consists of two primary microservices and a Dockerized infrastructur
 ## 🚦 Getting Started
 
 ### 1. Start Infrastructure
-Run the required backing services (MongoDB, Kafka, Ollama, Prometheus, Grafana) using Docker Compose.
+Run all services. Gmail credentials are in `notification-service/src/main/resources/application.yml` – real emails are sent when tasks are assigned.
 
 ```bash
 docker-compose up -d

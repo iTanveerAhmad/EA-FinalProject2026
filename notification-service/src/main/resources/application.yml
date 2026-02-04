@@ -1,14 +1,14 @@
 server:
   port: 8081
 
-# Email Notification - THIS SERVICE sends emails (release-service only publishes to Kafka)
+# Email Notification - THIS SERVICE sends real emails (release-service only publishes to Kafka)
 # Gmail: use your Gmail + App Password (enable 2-Step Verification first)
 spring:
   mail:
-    host: ${MAIL_HOST:smtp.gmail.com}
-    port: ${MAIL_PORT:587}
-    username: ${MAIL_USERNAME:ablikim.normamat@gmail.com}
-    password: ${MAIL_PASSWORD:txpoypvtnxzhlvgd}
+    host: smtp.gmail.com
+    port: 587
+    username: 
+    password: 
     default-encoding: UTF-8
     properties:
       mail:

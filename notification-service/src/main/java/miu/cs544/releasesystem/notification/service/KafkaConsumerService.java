@@ -38,6 +38,8 @@ public class KafkaConsumerService {
             if ("assigned".equals(key)) {
                 TaskAssignedEvent event = objectMapper.readValue(value, TaskAssignedEvent.class);
                 String recipient = resolveRecipient(event.getDeveloperEmail(), event.getDeveloperId());
+                log.info("TaskAssigned - developerId={}, developerEmail={}, resolved recipient={}", 
+                    event.getDeveloperId(), event.getDeveloperEmail(), recipient);
                 sendNotification(recipient, "New Task Assigned", "You have been assigned task " + event.getTaskId(), "TaskAssigned");
             } else if ("hotfix".equals(key)) {
                 HotfixTaskAddedEvent event = objectMapper.readValue(value, HotfixTaskAddedEvent.class);
