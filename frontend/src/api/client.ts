@@ -40,10 +40,10 @@ export const auth = {
       method: 'POST',
       body: JSON.stringify({ username, password }),
     }),
-  register: (username: string, password: string, role: 'ADMIN' | 'DEVELOPER') =>
+  register: (username: string, email: string, password: string, role: 'ADMIN' | 'DEVELOPER') =>
     api<{ token: string }>('/auth/register', {
       method: 'POST',
-      body: JSON.stringify({ username, password, role }),
+      body: JSON.stringify({ username, email, password, role }),
     }),
   me: () => api<{ username: string; role: string }>('/auth/me'),
 };

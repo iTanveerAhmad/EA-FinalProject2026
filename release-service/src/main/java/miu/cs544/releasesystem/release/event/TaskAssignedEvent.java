@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 public class TaskAssignedEvent {
     private String taskId;
     private String developerId;
+    private String developerEmail;
     private String releaseId;
 }

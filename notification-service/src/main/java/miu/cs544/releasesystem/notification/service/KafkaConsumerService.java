@@ -37,13 +37,16 @@ public class KafkaConsumerService {
         try {
             if ("assigned".equals(key)) {
                 TaskAssignedEvent event = objectMapper.readValue(value, TaskAssignedEvent.class);
-                sendNotification(event.getDeveloperId(), "New Task Assigned", "You have been assigned task " + event.getTaskId(), "TaskAssigned");
+                String recipient = resolveRecipient(event.getDeveloperEmail(), event.getDeveloperId());
+                sendNotification(recipient, "New Task Assigned", "You have been assigned task " + event.getTaskId(), "TaskAssigned");
             } else if ("hotfix".equals(key)) {
                 HotfixTaskAddedEvent event = objectMapper.readValue(value, HotfixTaskAddedEvent.class);
-                sendNotification(event.getDeveloperId(), "URGENT: Hotfix Task Added", "A hotfix task '" + event.getTaskTitle() + "' has been added to your release!", "HotfixAdded");
+                String recipient = resolveRecipient(event.getDeveloperEmail(), event.getDeveloperId());
+                sendNotification(recipient, "URGENT: Hotfix Task Added", "A hotfix task '" + event.getTaskTitle() + "' has been added to your release!", "HotfixAdded");
             } else if ("stale".equals(key)) {
                 StaleTaskDetectedEvent event = objectMapper.readValue(value, StaleTaskDetectedEvent.class);
-                sendNotification(event.getDeveloperId(), "Stale Task Reminder", "Task " + event.getTaskId() + " has been active for " + event.getDuration(), "StaleTask");
+                String recipient = resolveRecipient(event.getDeveloperEmail(), event.getDeveloperId());
+                sendNotification(recipient, "Stale Task Reminder", "Task " + event.getTaskId() + " has been active for " + event.getDuration(), "StaleTask");
             }
             // "completed" might not need notification
         } catch (Exception e) {
@@ -61,6 +64,13 @@ public class KafkaConsumerService {
             log.error("Error processing system event", e);
             throw new RuntimeException("Failed to process system event", e);
         }
+    }
+
+    private String resolveRecipient(String developerEmail, String developerId) {
+        if (developerEmail != null && !developerEmail.isBlank()) {
+            return developerEmail;
+        }
+        return developerId; // fallback: EmailService will append default-domain if needed
     }
 
     private void sendNotification(String recipient, String subject, String body, String type) {

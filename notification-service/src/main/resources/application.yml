@@ -1,13 +1,14 @@
 server:
   port: 8081
 
-# SMTP Mail Server - replace mail.example.com with your real server (e.g. smtp.gmail.com)
+# Email Notification - THIS SERVICE sends emails (release-service only publishes to Kafka)
+# Gmail: use your Gmail + App Password (enable 2-Step Verification first)
 spring:
   mail:
-    host: ${MAIL_HOST:mail.example.com}
+    host: ${MAIL_HOST:smtp.gmail.com}
     port: ${MAIL_PORT:587}
-    username: ${MAIL_USERNAME:noreply@example.com}
-    password: ${MAIL_PASSWORD:changeme}
+    username: ${MAIL_USERNAME:ablikim.normamat@gmail.com}
+    password: ${MAIL_PASSWORD:txpoypvtnxzhlvgd}
     default-encoding: UTF-8
     properties:
       mail:
@@ -28,10 +29,10 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
-# If recipient is a username (e.g. dev), append this to form email: dev@example.com
+# If recipient is a username (e.g. dev), append this to form email: dev@gmail.com
 notification:
   mail:
-    default-domain: ${MAIL_DEFAULT_DOMAIN:example.com}
+    default-domain: ${MAIL_DEFAULT_DOMAIN:gmail.com}
 
 management:
   endpoints:

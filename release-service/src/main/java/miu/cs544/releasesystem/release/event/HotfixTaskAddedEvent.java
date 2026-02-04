@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class HotfixTaskAddedEvent {
     private String taskId;
     private String developerId;
+    private String developerEmail;
     private String releaseId;
     private String taskTitle;
 }

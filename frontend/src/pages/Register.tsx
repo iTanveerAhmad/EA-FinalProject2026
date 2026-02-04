@@ -5,6 +5,7 @@ import './Auth.css'
 
 export default function Register() {
   const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [role, setRole] = useState<'ADMIN' | 'DEVELOPER'>('DEVELOPER')
   const [error, setError] = useState('')
@@ -20,7 +21,7 @@ export default function Register() {
     e.preventDefault()
     setError('')
     try {
-      await register(username, password, role)
+      await register(username, email, password, role)
       navigate('/')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Registration failed')
@@ -41,6 +42,16 @@ export default function Register() {
               onChange={(e) => setUsername(e.target.value)}
               required
               autoFocus
+            />
+          </div>
+          <div className="form-group">
+            <label>Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder="you@example.com"
             />
           </div>
           <div className="form-group">

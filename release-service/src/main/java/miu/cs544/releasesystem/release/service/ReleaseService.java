@@ -8,6 +8,7 @@ import miu.cs544.releasesystem.release.event.HotfixTaskAddedEvent;
 import miu.cs544.releasesystem.release.event.TaskAssignedEvent;
 import miu.cs544.releasesystem.release.event.TaskCompletedEvent;
 import miu.cs544.releasesystem.release.repository.ReleaseRepository;
+import miu.cs544.releasesystem.release.repository.UserRepository;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,7 @@ import java.util.Optional;
 public class ReleaseService {
 
     private final ReleaseRepository releaseRepository;
+    private final UserRepository userRepository;
     private final KafkaProducerService kafkaProducerService;
     private final ActivityStreamService activityStreamService;
     private final MeterRegistry meterRegistry;
@@ -83,6 +85,10 @@ public class ReleaseService {
         
         release.getTasks().add(task);
 
+        String developerEmail = userRepository.findFirstByUsername(task.getAssignedDeveloperId())
+                .map(User::getEmail)
+                .orElse(null);
+
         if (release.getStatus() == ReleaseStatus.COMPLETED) {
             log.info("Adding Hotfix to completed release: {}", releaseId);
             release.setStatus(ReleaseStatus.IN_PROGRESS);
@@ -90,6 +96,7 @@ public class ReleaseService {
             HotfixTaskAddedEvent event = new HotfixTaskAddedEvent(
                 task.getId(),
                 task.getAssignedDeveloperId(),
+                developerEmail,
                 release.getId(),
                 task.getTitle()
             );
@@ -100,6 +107,7 @@ public class ReleaseService {
         TaskAssignedEvent event = new TaskAssignedEvent(
             task.getId(),
             task.getAssignedDeveloperId(),
+            developerEmail,
             release.getId()
         );
         kafkaProducerService.sendTaskAssignedEvent(event);

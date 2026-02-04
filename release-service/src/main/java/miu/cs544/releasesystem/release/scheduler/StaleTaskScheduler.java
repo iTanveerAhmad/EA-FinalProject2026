@@ -2,8 +2,10 @@ package miu.cs544.releasesystem.release.scheduler;
 
 import miu.cs544.releasesystem.release.domain.Release;
 import miu.cs544.releasesystem.release.domain.TaskStatus;
+import miu.cs544.releasesystem.release.domain.User;
 import miu.cs544.releasesystem.release.event.StaleTaskDetectedEvent;
 import miu.cs544.releasesystem.release.repository.ReleaseRepository;
+import miu.cs544.releasesystem.release.repository.UserRepository;
 import miu.cs544.releasesystem.release.service.KafkaProducerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ import java.util.List;
 public class StaleTaskScheduler {
 
     private final ReleaseRepository releaseRepository;
+    private final UserRepository userRepository;
     private final KafkaProducerService kafkaProducerService;
 
     // Run every hour
@@ -45,9 +48,14 @@ public class StaleTaskScheduler {
                         Duration duration = Duration.between(t.getStartedAt(), now);
                         String durationStr = duration.toHours() + "h";
 
+                        String developerEmail = userRepository.findFirstByUsername(t.getAssignedDeveloperId())
+                                .map(User::getEmail)
+                                .orElse(null);
+
                         kafkaProducerService.sendStaleTaskDetectedEvent(new StaleTaskDetectedEvent(
                                 t.getId(),
                                 t.getAssignedDeveloperId(),
+                                developerEmail,
                                 durationStr
                         ));
                     });

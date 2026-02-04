@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 public class StaleTaskDetectedEvent {
     private String taskId;
     private String developerId;
+    private String developerEmail;
     private String duration; // e.g., "48h"
 }
