@@ -44,3 +44,6 @@ management:
       enabled: true
     health:
       show-details: always
+  health:
+    mail:
+      enabled: false  # Prevents AuthenticationFailedException when SMTP has no credentials
