@@ -4,56 +4,24 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledIf;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.DockerClientFactory;
-import org.testcontainers.containers.KafkaContainer;
-import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 
 import java.util.Map;
+import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
  * RestAssured integration tests for Release System REST API.
- * Uses Testcontainers for MongoDB and Kafka. Requires Docker to be running.
- * Skipped when Docker is unavailable; run with: docker-compose up -d mongodb kafka zookeeper (and mvn test)
- * or ensure Docker Desktop is running for Testcontainers.
+ * Uses docker-compose MongoDB and Kafka (localhost:27017, localhost:9092).
+ * Prerequisite: docker-compose up -d mongodb kafka zookeeper
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-@Testcontainers
-@EnabledIf("dockerAvailable")
 class ReleaseApiRestAssuredTest {
-
-    static boolean dockerAvailable() {
-        try {
-            DockerClientFactory.instance().client();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    @Container
-    static MongoDBContainer mongo = new MongoDBContainer(DockerImageName.parse("mongo:7"));
-
-    @Container
-    static KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.5.0"));
-
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.data.mongodb.uri", () -> mongo.getConnectionString() + "/release_db");
-        registry.add("spring.kafka.bootstrap-servers", kafka::getBootstrapServers);
-    }
 
     @LocalServerPort
     private int port;
@@ -88,9 +56,13 @@ class ReleaseApiRestAssuredTest {
     }
 
     private void registerAndLoginDeveloper() {
+        registerAndLoginDeveloper("dev_rest");
+    }
+
+    private void registerAndLoginDeveloper(String username) {
         given()
                 .contentType(ContentType.JSON)
-                .body(Map.of("username", "dev_rest", "password", "pass123", "role", "DEVELOPER"))
+                .body(Map.of("username", username, "password", "pass123", "role", "DEVELOPER"))
                 .when()
                 .post("/auth/register")
                 .then()
@@ -98,7 +70,7 @@ class ReleaseApiRestAssuredTest {
 
         developerToken = given()
                 .contentType(ContentType.JSON)
-                .body(Map.of("username", "dev_rest", "password", "pass123"))
+                .body(Map.of("username", username, "password", "pass123"))
                 .when()
                 .post("/auth/login")
                 .then()
@@ -265,8 +237,9 @@ class ReleaseApiRestAssuredTest {
      */
     @Test
     void task_start_shouldFail_whenPreviousTaskNotCompleted() {
+        String dev = "dev_seq_" + UUID.randomUUID().toString().substring(0, 8);
         registerAndLoginAdmin();
-        registerAndLoginDeveloper();
+        registerAndLoginDeveloper(dev);
 
         // 1) Admin creates release
         String rid = given()
@@ -284,7 +257,7 @@ class ReleaseApiRestAssuredTest {
         String task1Id = given()
                 .header("Authorization", "Bearer " + adminToken)
                 .contentType(ContentType.JSON)
-                .body(Map.of("title", "T1", "description", "First", "assignedDeveloperId", "dev_rest", "orderIndex", 0))
+                .body(Map.of("title", "T1", "description", "First", "assignedDeveloperId", dev, "orderIndex", 0))
                 .when()
                 .post("/releases/" + rid + "/tasks")
                 .then()
@@ -295,7 +268,7 @@ class ReleaseApiRestAssuredTest {
         String task2Id = given()
                 .header("Authorization", "Bearer " + adminToken)
                 .contentType(ContentType.JSON)
-                .body(Map.of("title", "T2", "description", "Second", "assignedDeveloperId", "dev_rest", "orderIndex", 1))
+                .body(Map.of("title", "T2", "description", "Second", "assignedDeveloperId", dev, "orderIndex", 1))
                 .when()
                 .post("/releases/" + rid + "/tasks")
                 .then()
@@ -326,8 +299,9 @@ class ReleaseApiRestAssuredTest {
      */
     @Test
     void task_start_shouldFail_whenDeveloperAlreadyHasInProcessTask() {
+        String dev = "dev_single_" + UUID.randomUUID().toString().substring(0, 8);
         registerAndLoginAdmin();
-        registerAndLoginDeveloper();
+        registerAndLoginDeveloper(dev);
 
         // 1) Admin creates release
         String rid = given()
@@ -345,7 +319,7 @@ class ReleaseApiRestAssuredTest {
         String task1Id = given()
                 .header("Authorization", "Bearer " + adminToken)
                 .contentType(ContentType.JSON)
-                .body(Map.of("title", "T1", "description", "First", "assignedDeveloperId", "dev_rest", "orderIndex", 0))
+                .body(Map.of("title", "T1", "description", "First", "assignedDeveloperId", dev, "orderIndex", 0))
                 .when()
                 .post("/releases/" + rid + "/tasks")
                 .then()
@@ -356,7 +330,7 @@ class ReleaseApiRestAssuredTest {
         String task2Id = given()
                 .header("Authorization", "Bearer " + adminToken)
                 .contentType(ContentType.JSON)
-                .body(Map.of("title", "T2", "description", "Second", "assignedDeveloperId", "dev_rest", "orderIndex", 1))
+                .body(Map.of("title", "T2", "description", "Second", "assignedDeveloperId", dev, "orderIndex", 1))
                 .when()
                 .post("/releases/" + rid + "/tasks")
                 .then()
@@ -387,8 +361,9 @@ class ReleaseApiRestAssuredTest {
      */
     @Test
     void completeRelease_shouldFail_whenTasksNotAllCompleted() {
+        String dev = "dev_complete_" + UUID.randomUUID().toString().substring(0, 8);
         registerAndLoginAdmin();
-        registerAndLoginDeveloper();
+        registerAndLoginDeveloper(dev);
 
         // 1) Admin creates release
         String rid = given()
@@ -406,7 +381,7 @@ class ReleaseApiRestAssuredTest {
         String task1Id = given()
                 .header("Authorization", "Bearer " + adminToken)
                 .contentType(ContentType.JSON)
-                .body(Map.of("title", "T1", "description", "First", "assignedDeveloperId", "dev_rest", "orderIndex", 0))
+                .body(Map.of("title", "T1", "description", "First", "assignedDeveloperId", dev, "orderIndex", 0))
                 .when()
                 .post("/releases/" + rid + "/tasks")
                 .then()
@@ -417,7 +392,7 @@ class ReleaseApiRestAssuredTest {
         String task2Id = given()
                 .header("Authorization", "Bearer " + adminToken)
                 .contentType(ContentType.JSON)
-                .body(Map.of("title", "T2", "description", "Second", "assignedDeveloperId", "dev_rest", "orderIndex", 1))
+                .body(Map.of("title", "T2", "description", "Second", "assignedDeveloperId", dev, "orderIndex", 1))
                 .when()
                 .post("/releases/" + rid + "/tasks")
                 .then()

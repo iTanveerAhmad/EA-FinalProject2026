@@ -18,13 +18,8 @@ public class Task {
     private TaskStatus status = TaskStatus.TODO;
     private String assignedDeveloperId;
     private Integer orderIndex;
-<<<<<<< HEAD
-    private Instant startedAt; // Added for Stale detection
-=======
-    // Audit fields and timestamps
     private Instant createdAt = Instant.now();
     private Instant startedAt;   // Used for stale detection
->>>>>>> f22b2c7 (some test cases are fixed)
     private Instant completedAt;
     private List<Comment> comments = new ArrayList<>();
 }

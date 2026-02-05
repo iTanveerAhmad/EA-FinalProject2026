@@ -170,7 +170,7 @@ public class ReleaseService {
         // Single In-Process Rule: Check if developer has another task in progress
         List<Release> activeReleases = releaseRepository.findReleasesWithActiveTaskForDeveloper(developerId);
         if (!activeReleases.isEmpty()) {
-             throw new RuntimeException("Developer already has an IN_PROCESS task. Finish it first!");
+             throw new BusinessRuleException("Developer already has an IN_PROCESS task. Finish it first!");
         }
 
         // Sequential Task Execution: Verify all previous tasks are completed
