@@ -89,8 +89,8 @@ public class OllamaService {
         session.getMessages().add(aiMessage);
         chatSessionRepository.save(session);
 
-        sample.stop(meterRegistry.timer("ai_requests", "model", model));
-        meterRegistry.counter("ai_requests_total").increment();
+        sample.stop(meterRegistry.timer("ai_request_latency_seconds", "model", model));
+        meterRegistry.counter("ai_request_rate", "model", model).increment();
         return aiMessage;
     }
 
