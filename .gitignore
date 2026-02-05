@@ -18,3 +18,4 @@ obj/
 *.py
 *.txt
 _pptx_build/
+_pptx_build*/
