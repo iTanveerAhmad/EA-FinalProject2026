@@ -15,4 +15,5 @@ obj/
 # Ignore temporary files
 *.log
 *.tmp
+*.py
 _pptx_build/
