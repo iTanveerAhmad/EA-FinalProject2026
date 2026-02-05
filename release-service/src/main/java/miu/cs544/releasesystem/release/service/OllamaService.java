@@ -32,6 +32,12 @@ public class OllamaService {
     @Value("${ollama.model:llama3}")
     private String model;
 
+    /**
+     * Number of past messages to include in the AI prompt context window.
+     */
+    @Value("${ai.context-window-size:5}")
+    private int contextWindowSize;
+
     private String getOllamaUrl() {
         String base = ollamaBaseUrl.endsWith("/") ? ollamaBaseUrl.substring(0, ollamaBaseUrl.length() - 1) : ollamaBaseUrl;
         return base + "/api/generate";
@@ -89,11 +95,9 @@ public class OllamaService {
     }
 
     private String buildContext(List<ChatMessage> messages) {
-        int start = Math.max(0, messages.size() - 6); // Take last 5 history + current (which isn't in list yet technically, but we added it)
-        // actually we added it before calling this.
-        
+        int window = Math.max(0, contextWindowSize);
         return messages.stream()
-                .skip(Math.max(0, messages.size() - 5)) // Last 5
+                .skip(Math.max(0, messages.size() - window))
                 .map(m -> (m.getRole().equals("user") ? "User: " : "Assistant: ") + m.getContent())
                 .collect(Collectors.joining("\n"));
     }

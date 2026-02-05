@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -18,5 +19,13 @@ public class ChatSession {
     @Id
     private String id = UUID.randomUUID().toString();
     private String developerId;
+
+    // Optional scoping for richer context (not required for core flow)
+    private String releaseId;
+    private String taskId;
+
+    private Instant createdAt = Instant.now();
+    private Instant updatedAt;
+
     private List<ChatMessage> messages = new ArrayList<>();
 }

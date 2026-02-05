@@ -1,0 +1,209 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] release-service                                                    [jar]
+[INFO] notification-service                                               [jar]
+[INFO] Release System                                                     [pom]
+[INFO] 
+[INFO] ---------------------< miu.cs544:release-service >----------------------
+[INFO] Building release-service 0.0.1-SNAPSHOT                            [1/3]
+[INFO]   from release-service\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ release-service ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ release-service ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ release-service ---
+[INFO] Copying 1 resource from src\test\resources to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ release-service ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- surefire:3.1.2:test (default-test) @ release-service ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+09:18:50.768 [main] INFO org.testcontainers.images.PullPolicy -- Image pull policy will be performed by: DefaultPullPolicy()
+09:18:50.776 [main] INFO org.testcontainers.utility.ImageNameSubstitutor -- Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+09:19:01.028 [main] WARN org.testcontainers.dockerclient.DockerClientProviderStrategy -- DOCKER_HOST npipe:////./pipe/docker_engine is not listening
+09:19:01.036 [main] INFO org.testcontainers.dockerclient.DockerMachineClientProviderStrategy -- docker-machine executable was not found on PATH ([C:\Program Files\Microsoft\jdk-21.0.7.6-hotspot\bin, C:\Python313\Scripts\, C:\Python313\, C:\Program Files\Microsoft MPI\Bin\, C:\Windows\system32, C:\Windows, C:\Windows\System32\Wbem, C:\Windows\System32\WindowsPowerShell\v1.0\, C:\Windows\System32\OpenSSH\, C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common, C:\Program Files\Microsoft SQL Server\150\Tools\Binn\, C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\, C:\Program Files (x86)\Microsoft SQL Server\160\Tools\Binn\, C:\Program Files\Microsoft SQL Server\160\Tools\Binn\, C:\Program Files\Microsoft SQL Server\160\DTS\Binn\, C:\Program Files\Azure Data Studio\bin, C:\ProgramData\chocolatey\bin, C:\Program Files\Microsoft\Web Platform Installer\, D:\php\php-7.4.1-Win32-vc15-x64, D:\composer, C:\Program Files\NVIDIA Corporation\NVIDIA app\NvDLISR, C:\WINDOWS\system32, C:\WINDOWS, C:\WINDOWS\System32\Wbem, C:\WINDOWS\System32\WindowsPowerShell\v1.0\, C:\WINDOWS\System32\OpenSSH\, C:\Program Files\nodejs\, C:\Program Files\Microsoft SQL Server Migration Assistant for MySQL\bin\, C:\Program Files\Microsoft SQL Server\170\Tools\Binn\, C:\Program Files\Microsoft SQL Server\170\DTS\Binn\, C:\Program Files\PowerShell\7\, C:\Program Files\dotnet\, C:\Program Files\Docker\Docker\resources\bin, C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\, D:\Maven\apache-maven-3.9.12-bin\bin, C:\Program Files\Git\cmd, C:\Program Files\Microsoft\jdk-21.0.7.6-hotspot\bin, C:\Python313\Scripts\, C:\Python313\, C:\Program Files\Microsoft MPI\Bin\, C:\Windows\system32, C:\Windows, C:\Windows\System32\Wbem, C:\Windows\System32\WindowsPowerShell\v1.0\, C:\Windows\System32\OpenSSH\, C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common, C:\Program Files\Microsoft SQL Server\150\Tools\Binn\, C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\, C:\Program Files (x86)\Microsoft SQL Server\160\Tools\Binn\, C:\Program Files\Microsoft SQL Server\160\Tools\Binn\, C:\Program Files\Microsoft SQL Server\160\DTS\Binn\, C:\Program Files\Azure Data Studio\bin, C:\ProgramData\chocolatey\bin, C:\Program Files\Microsoft\Web Platform Installer\, D:\php\php-7.4.1-Win32-vc15-x64, D:\composer, C:\Program Files\NVIDIA Corporation\NVIDIA app\NvDLISR, C:\WINDOWS\system32, C:\WINDOWS, C:\WINDOWS\System32\Wbem, C:\WINDOWS\System32\WindowsPowerShell\v1.0\, C:\WINDOWS\System32\OpenSSH\, C:\Program Files\nodejs\, C:\Program Files\Microsoft SQL Server Migration Assistant for MySQL\bin\, C:\Program Files\Microsoft SQL Server\170\Tools\Binn\, C:\Program Files\Microsoft SQL Server\170\DTS\Binn\, C:\Program Files\PowerShell\7\, C:\Program Files\dotnet\, C:\Program Files\Docker\Docker\resources\bin, C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\, D:\Maven\apache-maven-3.9.12-bin\bin, C:\Program Files\Git\cmd, D:\Python312\Scripts\, D:\Python312\, C:\Users\ablik\.config\herd-lite\bin, C:\Users\ablik\AppData\Local\Microsoft\PowerAppsCLI\, C:\Users\ablik\AppData\Local\Programs\Python\Launcher\, C:\Users\ablik\AppData\Local\Microsoft\WindowsApps, C:\Program Files\Azure Data Studio\bin, C:\Users\ablik\AppData\Local\Programs\Microsoft VS Code\bin, C:\Users\ablik\AppData\Roaming\Composer\vendor\bin, C:\Users\ablik\.dotnet\tools, C:\Users\ablik\AppData\Local\Programs\Ollama, C:\Users\ablik\AppData\Roaming\npm, C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2025.1.1.1\bin, C:\Users\ablik\.dotnet\tools, E:\Ollama, C:\Users\ablik\AppData\Local\Microsoft\WindowsApps, d:\Program Files\JetBrains\IntelliJ IDEA 2025.3\bin, C:\Users\ablik\AppData\Local\GitHubDesktop\bin, C:\Users\ablik\AppData\Local\Microsoft\WinGet\Links, D:\cursor\resources\app\bin, D:\Google\Cloud SDK\google-cloud-sdk\bin, C:\Users\ablik\AppData\Local\PowerToys\DSCModules\, C:\Users\ablik\.local\bin, C:\Users\ablik\AppData\Local\Pandoc\])
+09:19:01.039 [main] ERROR org.testcontainers.dockerclient.DockerClientProviderStrategy -- Could not find a valid Docker environment. Please check configuration. Attempted configurations were:
+As no valid configuration was found, execution cannot continue.
+See https://java.testcontainers.org/on_failure.html for more details.
+[INFO] Running miu.cs544.releasesystem.release.api.ReleaseApiRestAssuredTest
+[WARNING] Tests run: 14, Failures: 0, Errors: 0, Skipped: 14, Time elapsed: 0.006 s -- in miu.cs544.releasesystem.release.api.ReleaseApiRestAssuredTest
+[INFO] Running miu.cs544.releasesystem.release.ReleaseServiceApplicationTests
+09:19:01.252 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [miu.cs544.releasesystem.release.ReleaseServiceApplicationTests]: ReleaseServiceApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+09:19:01.392 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration miu.cs544.releasesystem.release.ReleaseServiceApplication for test class miu.cs544.releasesystem.release.ReleaseServiceApplicationTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.3)
+
+2026-02-05T09:19:02.087-06:00  INFO 21664 --- [release-service] [           main] m.c.r.r.ReleaseServiceApplicationTests   : Starting ReleaseServiceApplicationTests using Java 21.0.7 with PID 21664 (started by ablik in E:\MIU\CS544-2026-01A-01D-01\Project\release-service)
+2026-02-05T09:19:02.090-06:00  INFO 21664 --- [release-service] [           main] m.c.r.r.ReleaseServiceApplicationTests   : The following 1 profile is active: "test"
+2026-02-05T09:19:04.521-06:00  INFO 21664 --- [release-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2026-02-05T09:19:04.675-06:00  INFO 21664 --- [release-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 146 ms. Found 3 MongoDB repository interfaces.
+2026-02-05T09:19:06.784-06:00  INFO 21664 --- [release-service] [           main] org.mongodb.driver.client                : MongoClient with metadata {"driver": {"name": "mongo-java-driver|sync|spring-boot", "version": "4.11.1"}, "os": {"type": "Windows", "name": "Windows 11", "architecture": "amd64", "version": "10.0"}, "platform": "Java/Microsoft/21.0.7+6-LTS"} created with settings MongoClientSettings{readPreference=primary, writeConcern=WriteConcern{w=null, wTimeout=null ms, journal=null}, retryWrites=true, retryReads=true, readConcern=ReadConcern{level=null}, credential=MongoCredential{mechanism=null, userName='admin', source='admin', password=<hidden>, mechanismProperties=<hidden>}, transportSettings=null, streamFactoryFactory=null, commandListeners=[io.micrometer.core.instrument.binder.mongodb.MongoMetricsCommandListener@6adcf059], codecRegistry=ProvidersCodecRegistry{codecProviders=[ValueCodecProvider{}, BsonValueCodecProvider{}, DBRefCodecProvider{}, DBObjectCodecProvider{}, DocumentCodecProvider{}, CollectionCodecProvider{}, IterableCodecProvider{}, MapCodecProvider{}, GeoJsonCodecProvider{}, GridFSFileCodecProvider{}, Jsr310CodecProvider{}, JsonObjectCodecProvider{}, BsonCodecProvider{}, EnumCodecProvider{}, com.mongodb.client.model.mql.ExpressionCodecProvider@1a02ebe0, com.mongodb.Jep395RecordCodecProvider@58b3eb1, com.mongodb.KotlinCodecProvider@6d7e2795]}, loggerSettings=LoggerSettings{maxDocumentLength=1000}, clusterSettings={hosts=[localhost:27017], srvServiceName=mongodb, mode=SINGLE, requiredClusterType=UNKNOWN, requiredReplicaSetName='null', serverSelector='null', clusterListeners='[]', serverSelectionTimeout='30000 ms', localThreshold='15 ms'}, socketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=0, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, heartbeatSocketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=10000, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, connectionPoolSettings=ConnectionPoolSettings{maxSize=100, minSize=0, maxWaitTimeMS=120000, maxConnectionLifeTimeMS=0, maxConnectionIdleTimeMS=0, maintenanceInitialDelayMS=0, maintenanceFrequencyMS=60000, connectionPoolListeners=[io.micrometer.core.instrument.binder.mongodb.MongoMetricsConnectionPoolListener@2ac05a33], maxConnecting=2}, serverSettings=ServerSettings{heartbeatFrequencyMS=10000, minHeartbeatFrequencyMS=500, serverListeners='[]', serverMonitorListeners='[]'}, sslSettings=SslSettings{enabled=false, invalidHostNameAllowed=false, context=null}, applicationName='null', compressorList=[], uuidRepresentation=JAVA_LEGACY, serverApi=null, autoEncryptionSettings=null, dnsClient=null, inetAddressResolver=null, contextProvider=null}
+2026-02-05T09:19:06.884-06:00  INFO 21664 --- [release-service] [localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=27, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=168788800}
+2026-02-05T09:19:11.820-06:00  INFO 21664 --- [release-service] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 13 endpoint(s) beneath base path '/actuator'
+2026-02-05T09:19:12.085-06:00  INFO 21664 --- [release-service] [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@7ca7bddd, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@206e5183, org.springframework.security.web.context.SecurityContextHolderFilter@769a9b7a, org.springframework.security.web.header.HeaderWriterFilter@28c00acd, org.springframework.web.filter.CorsFilter@18301763, org.springframework.security.web.authentication.logout.LogoutFilter@729d1428, miu.cs544.releasesystem.release.security.JwtAuthenticationFilter@4301fa39, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@5003c114, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@6e4bccc, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@325236f5, org.springframework.security.web.session.SessionManagementFilter@71e55e48, org.springframework.security.web.access.ExceptionTranslationFilter@70d16858, org.springframework.security.web.access.intercept.AuthorizationFilter@5ca006ac]
+2026-02-05T09:19:13.497-06:00  INFO 21664 --- [release-service] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-02-05T09:19:13.498-06:00  INFO 21664 --- [release-service] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-02-05T09:19:13.500-06:00  INFO 21664 --- [release-service] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 2 ms
+2026-02-05T09:19:13.689-06:00  INFO 21664 --- [release-service] [           main] m.c.r.r.ReleaseServiceApplicationTests   : Started ReleaseServiceApplicationTests in 12.154 seconds (process running for 23.73)
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (C:\Users\ablik\.m2\repository\net\bytebuddy\byte-buddy-agent\1.14.12\byte-buddy-agent-1.14.12.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 14.14 s -- in miu.cs544.releasesystem.release.ReleaseServiceApplicationTests
+[INFO] 
+[INFO] Results:
+[INFO] 
+[WARNING] Tests run: 16, Failures: 0, Errors: 0, Skipped: 14
+[INFO] 
+[INFO] 
+[INFO] -------------------< miu.cs544:notification-service >-------------------
+[INFO] Building notification-service 0.0.1-SNAPSHOT                       [2/3]
+[INFO]   from notification-service\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ notification-service ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ notification-service ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ notification-service ---
+[INFO] skip non existing resourceDirectory E:\MIU\CS544-2026-01A-01D-01\Project\notification-service\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ notification-service ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- surefire:3.1.2:test (default-test) @ notification-service ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running miu.cs544.releasesystem.notification.service.KafkaConsumerServiceTest
+WARNING: A Java agent has been loaded dynamically (C:\Users\ablik\.m2\repository\net\bytebuddy\byte-buddy-agent\1.14.12\byte-buddy-agent-1.14.12.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+09:19:20.472 [main] INFO miu.cs544.releasesystem.notification.service.KafkaConsumerService -- Received Event - Key: assigned, Value: {"taskId":"task1","developerId":"dev1","developerEmail":"dev1@example.com","releaseId":"rel1"}
+09:19:20.501 [main] INFO miu.cs544.releasesystem.notification.service.KafkaConsumerService -- TaskAssigned - developerId=dev1, developerEmail=dev1@example.com, resolved recipient=dev1@example.com
+09:19:20.794 [main] INFO miu.cs544.releasesystem.notification.service.KafkaConsumerService -- Received Event - Key: assigned, Value: {"taskId":"task2","developerId":"dev2","developerEmail":"dev2@example.com","releaseId":"rel1"}
+09:19:20.796 [main] INFO miu.cs544.releasesystem.notification.service.KafkaConsumerService -- TaskAssigned - developerId=dev2, developerEmail=dev2@example.com, resolved recipient=dev2@example.com
+09:19:20.801 [main] ERROR miu.cs544.releasesystem.notification.service.KafkaConsumerService -- Failed to send email notification to dev2@example.com: SMTP error
+java.lang.RuntimeException: SMTP error
+	at miu.cs544.releasesystem.notification.service.EmailService.sendEmail(EmailService.java:24)
+	at miu.cs544.releasesystem.notification.service.KafkaConsumerService.sendNotification(KafkaConsumerService.java:87)
+	at miu.cs544.releasesystem.notification.service.KafkaConsumerService.listenTaskEvents(KafkaConsumerService.java:43)
+	at miu.cs544.releasesystem.notification.service.KafkaConsumerServiceTest.listenTaskEvents_logsFailure_whenEmailSendThrows(KafkaConsumerServiceTest.java:69)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:218)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:214)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:139)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:69)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.941 s -- in miu.cs544.releasesystem.notification.service.KafkaConsumerServiceTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] ----------------------< miu.cs544:release-system >----------------------
+[INFO] Building Release System 0.0.1-SNAPSHOT                             [3/3]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for Release System 0.0.1-SNAPSHOT:
+[INFO] 
+[INFO] release-service .................................... SUCCESS [ 31.382 s]
+[INFO] notification-service ............................... SUCCESS [  3.026 s]
+[INFO] Release System ..................................... SUCCESS [  0.000 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  34.792 s
+[INFO] Finished at: 2026-02-05T09:19:20-06:00
+[INFO] ------------------------------------------------------------------------

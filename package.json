@@ -1,0 +1,21 @@
+{
+  "name": "project",
+  "version": "1.0.0",
+  "description": "A comprehensive backend platform designed for fast-growing software companies to manage software releases, enforce strict workflows, and facilitate real-time collaboration.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iTanveerAhmad/EA-FinalProject2026.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/iTanveerAhmad/EA-FinalProject2026/issues"
+  },
+  "homepage": "https://github.com/iTanveerAhmad/EA-FinalProject2026#readme"
+}

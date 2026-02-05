@@ -1,34 +1,27 @@
 # Full Test Results Report (With Docker Attempt)
 **Date:** 2026-02-05  
+**Last Updated:** 2026-02-05 (DOCKER_HOST=tcp://localhost:2375 attempted; Testcontainers still cannot connect)  
 **Project:** Real-Time Release Management System  
 **Test Execution:** `mvn clean test -DskipITs=false`  
-**Docker Status:** Running but access denied (permissions issue)
+**Docker Status:** MongoDB/Kafka/Zookeeper running via docker-compose ✅
 
 ---
 
 ## Executive Summary
 
-**Overall Status:** ⚠️ **BUILD FAILURE** (1 test failure due to MongoDB connection)
+**Overall Status:** ✅ **BUILD SUCCESS**
 
 - **Total Tests:** 19 test methods
-- **Passed:** 4 tests ✅
-- **Failed:** 1 test ❌ (MongoDB connection timeout)
-- **Skipped:** 14 tests ⚠️ (Docker access denied)
+- **Passed:** 5 tests ✅
+- **Failed:** 0 tests ❌
+- **Skipped:** 14 tests ⚠️ (Testcontainers cannot access Docker from Maven process)
 - **Errors:** 0
 
-**Issues Identified:**
+**Current State (after docker-compose up -d mongodb kafka zookeeper):**
 
-1. **Docker Access Issue:** 
-   - Docker Desktop is running
-   - Testcontainers cannot access Docker API due to permissions: `Access is denied` when connecting to `npipe:////./pipe/dockerDesktopLinuxEngine`
-   - This is a Windows permissions issue with Docker named pipes
-   - **Impact:** 14 integration tests are skipped
-
-2. **MongoDB Connection Issue:**
-   - MongoDB is not running at `localhost:27017`
-   - Test `testRegisterAdmin` requires MongoDB connection
-   - Connection timeout after 30 seconds
-   - **Impact:** 1 test failure
+1. **MongoDB:** ✅ Running at localhost:27017 – `testRegisterAdmin` now passes
+2. **Testcontainers:** ⚠️ Still cannot access Docker API from Maven – 14 integration tests skipped
+3. **Unit Tests:** ✅ All 5 unit tests passing (2 ReleaseService + 3 NotificationService)
 
 ---
 
@@ -64,16 +57,9 @@
 | Test Method | Status | Purpose |
 |------------|--------|---------|
 | `contextLoads` | ✅ PASS | Verify Spring application context loads successfully |
-| `testRegisterAdmin` | ❌ FAIL | Test user registration endpoint (requires MongoDB) |
+| `testRegisterAdmin` | ✅ PASS | Test user registration endpoint (requires MongoDB) |
 
-**Failure Details:**
-- **Test:** `testRegisterAdmin`
-- **Expected:** HTTP 200 (OK)
-- **Actual:** HTTP 400 (Bad Request)
-- **Root Cause:** MongoDB connection timeout - MongoDB not running at `localhost:27017`
-- **Error:** `DataAccessResourceFailureException: Timed out after 30000 ms while waiting for a server`
-
-**Note:** The `contextLoads` test passes because it only verifies Spring context loading, not database connectivity. The `testRegisterAdmin` test fails because it attempts to register a user, which requires a MongoDB connection.
+**Note:** Both tests pass when MongoDB is running at `localhost:27017` (via `docker-compose up -d mongodb`).
 
 #### 2. Notification Service Tests (3 tests)
 
@@ -286,25 +272,21 @@ This will start MongoDB, Kafka, and Zookeeper, allowing both unit tests and inte
 - **Test Quality:** ✅ Industry-standard tools and practices
 
 **Current Execution Status:**
-- ⚠️ **BUILD FAILURE** - 1 test failing (MongoDB connection)
-- ✅ **4 tests passing** - Unit tests execute successfully
-- ⚠️ **14 tests skipped** - Require Docker access permissions
-- ❌ **1 test failing** - Requires MongoDB connection
+- ✅ **BUILD SUCCESS** - All runnable tests passing
+- ✅ **5 tests passing** - Unit tests execute successfully (with MongoDB running)
+- ⚠️ **14 tests skipped** - Testcontainers cannot access Docker from Maven process
+- ❌ **0 tests failing**
 
-**Next Steps:**
-1. ✅ **Start MongoDB** - Run `docker-compose up -d mongodb` or start MongoDB locally
-2. ✅ **Resolve Docker access permissions** - Run tests as Administrator or configure Docker
-3. ✅ **Re-run** `mvn clean test -DskipITs=false`
-4. ✅ **Verify all 19 tests execute and pass**
+**Completed Steps:**
+1. ✅ **MongoDB started** - `docker-compose up -d mongodb kafka zookeeper`
+2. ✅ **Tests re-run** - `mvn clean test -DskipITs=false`
+3. ✅ **Result:** BUILD SUCCESS, 5 tests passing, 0 failures
 
-**Quick Fix:**
-```bash
-# Start MongoDB and other services
-docker-compose up -d mongodb kafka zookeeper
-
-# Wait a few seconds for services to start, then run tests
-mvn clean test -DskipITs=false
-```
+**To run full test suite (including 14 integration tests):**
+- Integration tests require Testcontainers to access Docker.
+- **DOCKER_HOST=tcp://localhost:2375** – Connection refused (Docker Desktop does not expose port 2375 by default; enable in Settings → General).
+- **Named pipe** – AccessDeniedException when Maven runs from Cursor/IDE.
+- **Workaround:** Run `mvn test -DskipITs=false` from a standalone terminal (outside Cursor) where `docker ps` works.
 
 **Note:** The skipped tests are **not failures** - they are properly implemented and will execute once Docker access is resolved. The graceful skipping behavior demonstrates proper error handling in the test framework.
 

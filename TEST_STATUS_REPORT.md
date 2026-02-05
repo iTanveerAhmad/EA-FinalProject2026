@@ -1,16 +1,18 @@
 # Test Status Report
 **Date:** 2026-02-05  
+**Last Updated:** 2026-02-05 (DOCKER_HOST=tcp://localhost:2375 attempted; Testcontainers still cannot connect)  
 **Project:** Real-Time Release Management System
 
 ---
 
 ## Summary
 
-**Overall Test Status:** ✅ **Most tests pass** (with environmental dependencies noted)
+**Overall Test Status:** ✅ **BUILD SUCCESS**
 
-- **Unit Tests:** ✅ **All passing** (3/3 in notification-service)
-- **Integration Tests:** ⚠️ **Require Docker environment** (Testcontainers)
-- **Total Test Count:** 17+ test methods across both services
+- **Unit Tests:** ✅ **All passing** (5/5: 2 release-service + 3 notification-service)
+- **Integration Tests:** ⚠️ **14 skipped** (Testcontainers cannot access Docker from Maven)
+- **Total Test Count:** 19 test methods across both services
+- **Prerequisites:** MongoDB, Kafka, Zookeeper running via `docker-compose up -d mongodb kafka zookeeper`
 
 ---
 
@@ -57,7 +59,12 @@
 - Tests **will pass** when Docker environment is available and containers start successfully
 
 #### Unit Tests: `ReleaseServiceApplicationTests`
-**Status:** ✅ **Passing** (2 basic context loading tests)
+**Status:** ✅ **All 2 tests passing** (requires MongoDB at localhost:27017)
+
+| Test Method | Status | Description |
+|-------------|--------|-------------|
+| `contextLoads` | ✅ PASS | Spring application context loads |
+| `testRegisterAdmin` | ✅ PASS | User registration endpoint (requires MongoDB) |
 
 ---
 
