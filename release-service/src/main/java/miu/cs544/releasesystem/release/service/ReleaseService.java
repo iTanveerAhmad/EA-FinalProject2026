@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * ReleaseService implements the core business logic for release management.
@@ -40,6 +39,31 @@ public class ReleaseService {
     private final KafkaProducerService kafkaProducerService;
     private final ActivityStreamService activityStreamService;
     private final MeterRegistry meterRegistry;
+
+    // Register gauge for active developers count
+    @jakarta.annotation.PostConstruct
+    public void registerActiveDevelopersGauge() {
+        meterRegistry.gauge("active_developers_count", this, ReleaseService::countActiveDevelopers);
+    }
+
+    /**
+     * Counts the number of developers with at least one IN_PROCESS task.
+     */
+    public int countActiveDevelopers() {
+        List<User> allUsers = userRepository.findAll();
+        int count = 0;
+        for (User user : allUsers) {
+            if (user.getRole() == Role.DEVELOPER) {
+                // Check if this developer has any IN_PROCESS task
+                List<Release> releases = releaseRepository.findAll();
+                boolean hasActive = releases.stream()
+                    .flatMap(r -> r.getTasks().stream())
+                    .anyMatch(t -> user.getId().equals(t.getAssignedDeveloperId()) && t.getStatus() == TaskStatus.IN_PROCESS);
+                if (hasActive) count++;
+            }
+        }
+        return count;
+    }
 
     /**
      * Create a new release.
@@ -193,6 +217,9 @@ public class ReleaseService {
         release.setUpdatedAt(Instant.now());
         releaseRepository.save(release);
         meterRegistry.counter("tasks_completed_total").increment();
+        // Custom: tasks_completed_per_day with date tag
+        String date = java.time.LocalDate.now().toString();
+        meterRegistry.counter("tasks_completed_per_day", "date", date).increment();
 
         TaskCompletedEvent event = new TaskCompletedEvent(taskId, developerId, release.getId());
         kafkaProducerService.sendTaskCompletedEvent(event);

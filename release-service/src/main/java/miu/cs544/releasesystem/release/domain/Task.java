@@ -19,5 +19,6 @@ public class Task {
     private String assignedDeveloperId;
     private Integer orderIndex;
     private Instant startedAt; // Added for Stale detection
+    private Instant completedAt;
     private List<Comment> comments = new ArrayList<>();
 }

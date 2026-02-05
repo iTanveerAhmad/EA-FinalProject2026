@@ -7,6 +7,7 @@ import miu.cs544.releasesystem.release.domain.ReleaseStatus;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,11 @@ public class Release {
     private String id;
     private String name;
     private String description;
+    private Instant createdAt;
+    private Instant updatedAt;
+    private boolean reopened;
+    private Integer hotfixCount;
+    private Instant reopenedAt;
     private ReleaseStatus status = ReleaseStatus.IN_PROGRESS;
     private List<Task> tasks = new ArrayList<>();
 }
