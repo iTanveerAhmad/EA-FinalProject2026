@@ -91,7 +91,16 @@ java -jar notification-service/target/notification-service-0.0.1-SNAPSHOT.jar
 *   `POST /chat/{sessionId}/message` - Send a message to the AI assistant.
 
 ## 📊 Monitoring
+
 *   **Prometheus:** `http://localhost:9090`
 *   **Grafana:** `http://localhost:3000` (Default login: `admin` / `admin`)
-"# MIU_CS544_Project" 
-"# koznak-MIU_CS544_Project" 
+
+### Grafana Dashboards
+
+| Title | Metric | Visualization |
+|-------|--------|---------------|
+| Active Developers | `active_developers_count` | Gauge / Stat |
+| Total Tasks Completed | `tasks_completed_total` | Stat |
+| Tasks Completed (24h) | `increase(tasks_completed_total[24h])` | Bar Gauge |
+| Kafka Event Rate | `sum(rate(kafka_events_published_total[1m])) * 60` | Time Series |
+| Total Events Sent | `kafka_events_published_total` | Stat |
