@@ -80,8 +80,8 @@ public class OllamaService {
 
             aiResponseText = response != null ? response.getResponse() : "Error: No response from AI.";
         } catch (Exception e) {
-            log.error("Ollama connection failed", e);
-            aiResponseText = "I'm sorry, I cannot connect to my brain (Ollama) right now. Is it running?";
+            log.error("Ollama connection failed: {} - {}", e.getClass().getSimpleName(), e.getMessage(), e);
+            aiResponseText = "I'm sorry, I cannot connect to my brain (Ollama) right now. Is it running? (Error: " + e.getMessage() + ")";
         }
 
         // 4. Save AI Response
