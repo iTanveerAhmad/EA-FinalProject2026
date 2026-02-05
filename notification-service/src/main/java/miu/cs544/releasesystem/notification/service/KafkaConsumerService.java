@@ -76,16 +76,22 @@ public class KafkaConsumerService {
     }
 
     private void sendNotification(String recipient, String subject, String body, String type) {
-        // Send Email
-        emailService.sendEmail(recipient, subject, body);
-
-        // Log to DB
         NotificationLog logEntry = new NotificationLog();
         logEntry.setRecipient(recipient);
         logEntry.setSubject(subject);
         logEntry.setBody(body);
         logEntry.setEventType(type);
         logEntry.setTimestamp(Instant.now());
+
+        try {
+            emailService.sendEmail(recipient, subject, body);
+            logEntry.setDeliveryStatus("SENT");
+        } catch (Exception e) {
+            log.error("Failed to send email notification to {}: {}", recipient, e.getMessage(), e);
+            logEntry.setDeliveryStatus("FAILED");
+            logEntry.setErrorMessage(e.getMessage());
+        }
+
         notificationLogRepository.save(logEntry);
     }
 }

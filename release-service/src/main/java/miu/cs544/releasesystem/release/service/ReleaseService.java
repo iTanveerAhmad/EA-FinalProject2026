@@ -48,6 +48,8 @@ public class ReleaseService {
         Release release = new Release();
         release.setName(request.getName());
         release.setDescription(request.getDescription());
+        release.setCreatedAt(Instant.now());
+        release.setUpdatedAt(Instant.now());
         return releaseRepository.save(release);
     }
 
@@ -92,6 +94,11 @@ public class ReleaseService {
         if (release.getStatus() == ReleaseStatus.COMPLETED) {
             log.info("Adding Hotfix to completed release: {}", releaseId);
             release.setStatus(ReleaseStatus.IN_PROGRESS);
+
+            // Track hotfix / reopening metadata
+            release.setReopened(true);
+            release.setHotfixCount(release.getHotfixCount() + 1);
+            release.setReopenedAt(Instant.now());
             
             HotfixTaskAddedEvent event = new HotfixTaskAddedEvent(
                 task.getId(),
@@ -112,6 +119,7 @@ public class ReleaseService {
         );
         kafkaProducerService.sendTaskAssignedEvent(event);
 
+        release.setUpdatedAt(Instant.now());
         return releaseRepository.save(release);
     }
 
@@ -181,6 +189,8 @@ public class ReleaseService {
         }
 
         task.setStatus(TaskStatus.COMPLETED);
+        task.setCompletedAt(Instant.now());
+        release.setUpdatedAt(Instant.now());
         releaseRepository.save(release);
         meterRegistry.counter("tasks_completed_total").increment();
 
@@ -207,6 +217,7 @@ public class ReleaseService {
         }
 
         release.setStatus(ReleaseStatus.COMPLETED);
+        release.setUpdatedAt(Instant.now());
         releaseRepository.save(release);
         log.info("Release {} marked as COMPLETED", releaseId);
     }

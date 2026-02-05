@@ -22,6 +22,10 @@ spring:
         enable.idempotence: true
         spring.json.add.type.headers: false
 
+ai:
+  # Number of previous messages to include as context for Ollama
+  context-window-size: 5
+
 ollama:
   url: ${OLLAMA_URL:http://localhost:11434}
   # Model to use: llama3, phi, llama3.2, etc. Use "phi" for smaller/faster (ollama pull phi)

@@ -20,4 +20,9 @@ public class NotificationLog {
     private String body;
     private String eventType;
     private Instant timestamp;
+
+    // Delivery/audit metadata
+    private String deliveryStatus;   // e.g. SENT, FAILED
+    private String relatedEventId;   // optional Kafka key or id
+    private String errorMessage;     // populated on failure
 }

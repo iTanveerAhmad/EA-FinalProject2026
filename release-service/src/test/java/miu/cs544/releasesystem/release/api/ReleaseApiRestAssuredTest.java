@@ -60,7 +60,6 @@ class ReleaseApiRestAssuredTest {
 
     private String adminToken;
     private String developerToken;
-    private String releaseId;
 
     @BeforeEach
     void setUp() {
@@ -167,7 +166,7 @@ class ReleaseApiRestAssuredTest {
     @Test
     void releases_createRelease_asAdmin_returnsOk() {
         registerAndLoginAdmin();
-        releaseId = given()
+        given()
                 .header("Authorization", "Bearer " + adminToken)
                 .contentType(ContentType.JSON)
                 .body(Map.of("name", "Test Release", "description", "RestAssured test"))
@@ -176,9 +175,7 @@ class ReleaseApiRestAssuredTest {
                 .then()
                 .statusCode(200)
                 .body("id", notNullValue())
-                .body("name", equalTo("Test Release"))
-                .extract()
-                .path("id");
+                .body("name", equalTo("Test Release"));
     }
 
     @Test
@@ -256,6 +253,222 @@ class ReleaseApiRestAssuredTest {
                 .then()
                 .statusCode(200)
                 .contentType(containsString("text/event-stream"));
+    }
+
+    // -------------------------------------------------------------------------
+    //  Additional tests for business rules & workflow constraints
+    // -------------------------------------------------------------------------
+
+    /**
+     * Sequential Execution Rule:
+     * Task 2 cannot be started before Task 1 is COMPLETED.
+     */
+    @Test
+    void task_start_shouldFail_whenPreviousTaskNotCompleted() {
+        registerAndLoginAdmin();
+        registerAndLoginDeveloper();
+
+        // 1) Admin creates release
+        String rid = given()
+                .header("Authorization", "Bearer " + adminToken)
+                .contentType(ContentType.JSON)
+                .body(Map.of("name", "Sequential Release", "description", "Seq test"))
+                .when()
+                .post("/releases")
+                .then()
+                .statusCode(200)
+                .extract()
+                .path("id");
+
+        // 2) Admin adds two tasks for same developer with orderIndex 0 and 1
+        String task1Id = given()
+                .header("Authorization", "Bearer " + adminToken)
+                .contentType(ContentType.JSON)
+                .body(Map.of("title", "T1", "description", "First", "assignedDeveloperId", "dev_rest", "orderIndex", 0))
+                .when()
+                .post("/releases/" + rid + "/tasks")
+                .then()
+                .statusCode(200)
+                .extract()
+                .path("tasks[0].id");
+
+        String task2Id = given()
+                .header("Authorization", "Bearer " + adminToken)
+                .contentType(ContentType.JSON)
+                .body(Map.of("title", "T2", "description", "Second", "assignedDeveloperId", "dev_rest", "orderIndex", 1))
+                .when()
+                .post("/releases/" + rid + "/tasks")
+                .then()
+                .statusCode(200)
+                .extract()
+                .path("tasks[1].id");
+
+        // 3) Developer tries to start Task 2 first -> should violate sequential rule (expect 409)
+        given()
+                .header("Authorization", "Bearer " + developerToken)
+                .when()
+                .patch("/tasks/" + task2Id + "/start")
+                .then()
+                .statusCode(409);
+
+        // 4) Developer starts Task 1 -> OK
+        given()
+                .header("Authorization", "Bearer " + developerToken)
+                .when()
+                .patch("/tasks/" + task1Id + "/start")
+                .then()
+                .statusCode(200);
+    }
+
+    /**
+     * Single In-Process Rule:
+     * Developer cannot have more than one IN_PROCESS task.
+     */
+    @Test
+    void task_start_shouldFail_whenDeveloperAlreadyHasInProcessTask() {
+        registerAndLoginAdmin();
+        registerAndLoginDeveloper();
+
+        // 1) Admin creates release
+        String rid = given()
+                .header("Authorization", "Bearer " + adminToken)
+                .contentType(ContentType.JSON)
+                .body(Map.of("name", "Single InProcess Release", "description", "Rule test"))
+                .when()
+                .post("/releases")
+                .then()
+                .statusCode(200)
+                .extract()
+                .path("id");
+
+        // 2) Two tasks assigned to same developer, sequential order (0, 1)
+        String task1Id = given()
+                .header("Authorization", "Bearer " + adminToken)
+                .contentType(ContentType.JSON)
+                .body(Map.of("title", "T1", "description", "First", "assignedDeveloperId", "dev_rest", "orderIndex", 0))
+                .when()
+                .post("/releases/" + rid + "/tasks")
+                .then()
+                .statusCode(200)
+                .extract()
+                .path("tasks[0].id");
+
+        String task2Id = given()
+                .header("Authorization", "Bearer " + adminToken)
+                .contentType(ContentType.JSON)
+                .body(Map.of("title", "T2", "description", "Second", "assignedDeveloperId", "dev_rest", "orderIndex", 1))
+                .when()
+                .post("/releases/" + rid + "/tasks")
+                .then()
+                .statusCode(200)
+                .extract()
+                .path("tasks[1].id");
+
+        // 3) Start Task 1 as developer -> OK
+        given()
+                .header("Authorization", "Bearer " + developerToken)
+                .when()
+                .patch("/tasks/" + task1Id + "/start")
+                .then()
+                .statusCode(200);
+
+        // 4) Try to start Task 2 while Task 1 is still IN_PROCESS -> should fail with 409
+        given()
+                .header("Authorization", "Bearer " + developerToken)
+                .when()
+                .patch("/tasks/" + task2Id + "/start")
+                .then()
+                .statusCode(409);
+    }
+
+    /**
+     * Release completion rule:
+     * Release cannot be marked as COMPLETED if any task is not COMPLETED.
+     */
+    @Test
+    void completeRelease_shouldFail_whenTasksNotAllCompleted() {
+        registerAndLoginAdmin();
+        registerAndLoginDeveloper();
+
+        // 1) Admin creates release
+        String rid = given()
+                .header("Authorization", "Bearer " + adminToken)
+                .contentType(ContentType.JSON)
+                .body(Map.of("name", "Completion Release", "description", "Completion rule test"))
+                .when()
+                .post("/releases")
+                .then()
+                .statusCode(200)
+                .extract()
+                .path("id");
+
+        // 2) Two tasks for same developer, order 0 and 1
+        String task1Id = given()
+                .header("Authorization", "Bearer " + adminToken)
+                .contentType(ContentType.JSON)
+                .body(Map.of("title", "T1", "description", "First", "assignedDeveloperId", "dev_rest", "orderIndex", 0))
+                .when()
+                .post("/releases/" + rid + "/tasks")
+                .then()
+                .statusCode(200)
+                .extract()
+                .path("tasks[0].id");
+
+        String task2Id = given()
+                .header("Authorization", "Bearer " + adminToken)
+                .contentType(ContentType.JSON)
+                .body(Map.of("title", "T2", "description", "Second", "assignedDeveloperId", "dev_rest", "orderIndex", 1))
+                .when()
+                .post("/releases/" + rid + "/tasks")
+                .then()
+                .statusCode(200)
+                .extract()
+                .path("tasks[1].id");
+
+        // 3) Start and complete only Task 1
+        given()
+                .header("Authorization", "Bearer " + developerToken)
+                .when()
+                .patch("/tasks/" + task1Id + "/start")
+                .then()
+                .statusCode(200);
+
+        given()
+                .header("Authorization", "Bearer " + developerToken)
+                .when()
+                .patch("/tasks/" + task1Id + "/complete")
+                .then()
+                .statusCode(200);
+
+        // 4) Try to complete release while Task 2 is still TODO -> expect 409
+        given()
+                .header("Authorization", "Bearer " + adminToken)
+                .when()
+                .patch("/releases/" + rid + "/complete")
+                .then()
+                .statusCode(409);
+
+        // 5) Complete Task 2 and then complete release -> expect 200
+        given()
+                .header("Authorization", "Bearer " + developerToken)
+                .when()
+                .patch("/tasks/" + task2Id + "/start")
+                .then()
+                .statusCode(200);
+
+        given()
+                .header("Authorization", "Bearer " + developerToken)
+                .when()
+                .patch("/tasks/" + task2Id + "/complete")
+                .then()
+                .statusCode(200);
+
+        given()
+                .header("Authorization", "Bearer " + adminToken)
+                .when()
+                .patch("/releases/" + rid + "/complete")
+                .then()
+                .statusCode(200);
     }
 
     @Test
